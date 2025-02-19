@@ -1,0 +1,112 @@
+/* Auth Modal Styling */
+#authModal .modal-content {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+
+.gradient-bg {
+    background: #212529; /* Updated to match navbar */
+}
+
+/* Form Styling */
+.auth-form .form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.floating-input input,
+.floating-input select {
+    width: 100%;
+    height: 50px;
+    padding: 0 20px 0 40px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.floating-input select {
+    appearance: none;
+    padding-right: 40px;
+}
+
+.floating-input label {
+    position: absolute;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.floating-input i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    transition: color 0.3s ease;
+}
+
+.floating-input input:focus,
+.floating-input input:valid,
+.floating-input select:valid {
+    border-color: #212529; /* Updated to match navbar */
+    padding-top: 15px;
+}
+
+.floating-input input:focus ~ label,
+.floating-input input:valid ~ label,
+.floating-input select:valid ~ label {
+    top: 12px;
+    left: 40px;
+    font-size: 0.8rem;
+    color: #212529; /* Updated to match navbar */
+}
+
+.floating-input input:focus ~ i,
+.floating-input input:valid ~ i {
+    color: #212529; /* Updated to match navbar */
+}
+
+/* Button Styles */
+.auth-btn {
+    position: relative;
+    overflow: hidden;
+    border: none;
+    transition: all 0.4s ease;
+    background: #212529; /* Updated to match navbar */
+}
+
+.auth-btn i {
+    position: absolute;
+    right: 20px;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.3s ease;
+}
+
+.auth-btn:hover .auth-btn-text {
+    transform: translateX(-10px);
+}
+
+.auth-btn:hover i {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Tab Styling */
+.nav-pills .nav-link {
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    color: #212529; /* Updated to match navbar */
+}
+
+.nav-pills .nav-link.active {
+    background: #212529; /* Updated to match navbar */
+    color: white;
+    transform: scale(1.05);
+}

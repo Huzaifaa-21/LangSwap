@@ -1,0 +1,275 @@
+/* Custom CSS for Bootstrap Navbar */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 24px;
+  }
+  
+  .nav-link {
+    transition: color 0.3s ease !important;
+  }
+  
+  .nav-link:hover {
+    color: #ff6347 !important;
+  }
+  
+  .btn-register {
+    margin-left: 15px;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    padding: 8px 20px;
+  }
+  
+  .btn-register:hover {
+    background-color: #ff6347 !important;
+    border-color: #ff6347 !important;
+    transform: translateY(-2px);
+  }
+  .step-2 {
+    animation-delay: 0.2s;
+}.step-3 {
+    animation-delay: 0.4s;
+}
+  
+  /* Optional: Mobile menu tweaks */
+  @media (max-width: 991px) {
+    .btn-register {
+      margin-left: 0;
+      margin-top: 10px;
+      width: 100%;
+    }
+    
+    .navbar-nav {
+      margin-top: 15px;
+    }
+  }
+
+.steps-container {
+    display: flex;
+    flex-direction: column; /* Stack steps vertically */
+    align-items: center; /* Center align steps */
+}
+
+.step {
+    opacity: 0; /* Start hidden */
+    transform: translateY(20px); /* Start slightly below */
+    animation-fill-mode: forwards; /* Keep the final state of the animation */
+    margin: 15px 0; /* Reduced spacing between steps */
+    padding: 10px; /* Reduced padding for smaller appearance */
+    background-color: #f8f9fa; /* Light background for steps */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    width: 70%; /* Set a width for the steps */
+    font-size: 0.9rem; /* Smaller font size */
+}
+
+.step.animated {
+    animation: fadeInUp 3.5s ease forwards; /* Slower animation for fade in and move up */
+}
+
+.step-1 {
+    animation-delay: 0s; /* No delay for the first step */
+}
+
+.step-2 {
+    animation-delay: 3s; /* Increased delay for the second step */
+}
+
+.step-3 {
+    animation-delay: 5s; /* Increased delay for the third step */
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1; /* Fully visible */
+        transform: translateY(0); /* Move to original position */
+    }
+}
+
+/* Project Name Styling with Animation */
+.project-name {
+    font-size: 3rem; /* Large font size for the title */
+    text-align: center; /* Centered text */
+    margin-bottom: 20px; /* Space below the title */
+    text-transform: uppercase; /* Uppercase letters */
+    letter-spacing: 2px; /* Spacing between letters */
+    background: linear-gradient(45deg, #ff6b6b, #ffd93d); /* Gradient text */
+    -webkit-background-clip: text; /* Clip background to text */
+    background-clip: text; /* Clip background to text */
+    -webkit-text-fill-color: transparent; /* Make text transparent */
+    opacity: 0; /* Start invisible */
+    transform: translateY(-20px); /* Start slightly above */
+    animation: fadeInUp 1s ease forwards; /* Animation for fade-in and move up */
+}
+
+
+/* Fade-in and Move Up Animation */
+@keyframes fadeInUp {
+    to {
+        opacity: 1; /* Fully visible */
+        transform: translateY(0); /* Move to original position */
+    }
+}
+/* Custom CSS for About Section */
+.about-container {
+  padding: 50px 20px;
+  background-color: #f8f9fa; /* Light background for the about section */
+  border-radius: 10px;
+  margin: 20px auto;
+  max-width: 1200px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.about-content {
+  text-align: center;
+}
+
+.about-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #333;
+  margin-top: 20px;
+  text-align: left;
+  padding: 0 20px;
+}
+
+.about-text p {
+  margin-bottom: 20px;
+}
+
+.about-text ul {
+  list-style-type: disc;
+  padding-left: 40px;
+  margin-bottom: 20px;
+}
+
+.about-text ul li {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: #555;
+}
+
+.about-text strong {
+  color: #ff6347; /* Highlight color for strong text */
+}
+
+.social-icons {
+  margin-top: 30px;
+}
+
+.social-icons .icon-link {
+  font-size: 1.5rem;
+  margin: 0 10px;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.social-icons .icon-link:hover {
+  color: #ff6347; /* Highlight color on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .about-container {
+      padding: 30px 10px;
+  }
+
+  .about-text {
+      font-size: 1rem;
+      padding: 0 10px;
+  }
+
+  .about-text ul {
+      padding-left: 20px;
+  }
+
+  .social-icons .icon-link {
+      font-size: 1.2rem;
+  }
+}
+/* Contact Form Styling */
+.contact-form {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.contact-form .form-group {
+    margin-bottom: 20px;
+}
+
+.contact-form label {
+    font-weight: bold;
+    color: #333;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    border-color: #ff6347;
+    outline: none;
+}
+
+.contact-form .btn-submit {
+    background-color: #ff6347;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.contact-form .btn-submit:hover {
+    background-color: #e5533d;
+}
+
+.step-symbol {
+    font-size: 1.5rem; /* Adjust size of the icon */
+    margin-right: 10px; /* Space between icon and text */
+    vertical-align: middle; /* Align the icon with the text */
+    color: #ff6b6b; /* Change color of the icons */
+}
+
+/* Footer Styling */
+.footer {
+    background-color: #f8f9fa; /* Light background for the footer */
+    color: #343a40; /* Dark text color */
+    padding: 20px 0; /* Reduced padding for the footer */
+}
+
+.footer h2 {
+    margin-bottom: 10px; /* Reduced space below the heading */
+    font-size: 1.5rem; /* Font size for the heading */
+}
+
+.footer h4 {
+    margin-top: 5px; /* Reduced space above the subheading */
+    font-size: 1.2rem; /* Font size for subheadings */
+}
+
+.footer p {
+    font-size: 0.9rem; /* Font size for the paragraph */
+    line-height: 1.4; /* Line height for readability */
+}
+
+.footer-bottom {
+    margin-top: 10px; /* Reduced space above the bottom text */
+    font-size: 0.8rem; /* Smaller font size for copyright */
+}
+
+/* Adjust column width */
+.footer .col-md-3 {
+    max-width: 250px; /* Set a maximum width for each column */
+}

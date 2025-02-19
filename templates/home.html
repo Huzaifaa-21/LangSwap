@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Translator using AI</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/styles.css">
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">LangSwap</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" title="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('main.home') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.about') }}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#translate">Translate</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.contact') }}">Contact</a>
+                </li>
+            </ul>
+            <a href="{{ url_for('main.register') }}" class="btn btn-outline-light btn-register">Register/Login</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Steps to Translate Section -->
+<section id="translate-steps" class="container my-5">
+    <h2 class="text-center">How to Translate</h2>
+    <div class="steps-container">
+        <div class="step animated fadeIn step-1">
+            <h3><i class="fas fa-microphone-alt step-symbol"></i> Step 1: Input Audio</h3>
+            <p>Record your audio or upload a text file.</p>
+        </div>
+        <div class="step animated fadeIn step-2">
+            <h3><i class="fas fa-globe step-symbol"></i> Step 2: Select Language</h3>
+            <p>Choose the desired language for translation.</p>
+        </div>
+        <div class="step animated fadeIn step-3">
+            <h3><i class="fas fa-comment-dots step-symbol"></i> Step 3: View Output</h3>
+            <p>Your translation will be displayed in text, or you can listen to it.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Footer Section -->
+<footer class="footer bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Why Choose LangSwap?</h2>
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <i class="fas fa-bolt fa-2x mb-2"></i>
+                <h4>Fast and Reliable</h4>
+                <p>Experience quick translations that you can trust.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-users fa-2x mb-2"></i>
+                <h4>Community Support</h4>
+                <p>Join a community of users and share your experiences.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-comments fa-2x mb-2"></i>
+                <h4>Feedback Welcome</h4>
+                <p>Your input helps us improve our services.</p>
+            </div>
+        </div>
+        <div class="footer-bottom text-center mt-4">
+            <p>&copy; 2025 LangSwap. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

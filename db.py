@@ -11,8 +11,8 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Huzaifa%4021@localhost:3308/LangSwap'  # Added port
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Disable modification tracking
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Huzaifa%4021@localhost:3308/LangSwap'  # Update with your credentials
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ECHO'] = True  # Show SQL queries for debugging
 
     # Initialize the SQLAlchemy instance with the app
@@ -31,6 +31,21 @@ class ContactSubmission(db.Model):
 
     def __repr__(self):
         return f'<ContactSubmission {self.name}>'
+
+class UserRegistration(db.Model):
+    __tablename__ = 'registrations'  # Table name for storing registration data
+    
+    id = db.Column(db.Integer, primary_key=True)
+    full_name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False, unique=True)
+    phone_number = db.Column(db.String(15), nullable=False)  # Adjust length as needed
+    gender = db.Column(db.String(10), nullable=False)  # e.g., 'Male', 'Female', 'Other'
+    age = db.Column(db.Integer, nullable=False)
+    password = db.Column(db.String(200), nullable=False)  # Store hashed passwords
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<UserRegistration {self.full_name}>'
 
 def create_database():
     try:
@@ -55,9 +70,9 @@ def create_database():
             cursor.close()
             connection.close()
 
-def create_tables(app):
+def create_tables(app):  # Accept app as an argument
     with app.app_context():
-        db.create_all()
+        db.create_all()  # This will create all tables, including the new UserRegistration table
         print("Tables created successfully")
 
 def submit_contact_form(app, name, email, message):

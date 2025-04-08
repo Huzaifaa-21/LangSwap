@@ -15,6 +15,28 @@
 </head>
 <body>
 
+<!-- Flash Message Toast -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="flashToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Notification</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show mb-2" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
+
 <!-- Auth Modal -->
 <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -36,14 +58,14 @@
                 <div class="tab-content">
                     <!-- Login Form -->
                     <div class="tab-pane fade show active" id="login">
-                        <form class="auth-form" id="loginForm">
+                        <form class="auth-form" method="POST" action="{{ url_for('main.login') }}">
                             <div class="form-group floating-input">
-                                <input type="email" id="loginEmail" required>
+                                <input type="email" id="loginEmail" name="email" class="form-control" required>
                                 <label for="loginEmail">Email</label>
                                 <i class="fas fa-envelope"></i>
                             </div>
                             <div class="form-group floating-input">
-                                <input type="password" id="loginPassword" required>
+                                <input type="password" id="loginPassword" name="password" class="form-control" required>
                                 <label for="loginPassword">Password</label>
                                 <i class="fas fa-lock"></i>
                             </div>
@@ -56,36 +78,36 @@
 
                     <!-- Registration Form -->
                     <div class="tab-pane fade" id="register">
-                        <form class="auth-form" id="registrationForm">
+                        <form method="POST" action="{{ url_for('main.register') }}" class="auth-form">
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-group floating-input">
-                                        <input type="text" id="fullName" required>
-                                        <label for="fullName">Full Name</label>
+                                        <input type="text" id="full_name" name="full_name" class="form-control" required>
+                                        <label for="full_name">Full Name</label>
                                         <i class="fas fa-user"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group floating-input">
-                                        <input type="email" id="regEmail" required>
-                                        <label for="regEmail">Email</label>
+                                        <input type="email" id="email" name="email" class="form-control" required>
+                                        <label for="email">Email</label>
                                         <i class="fas fa-envelope"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group floating-input">
-                                        <input type="tel" id="phone" pattern="[0-9]{10}" required>
-                                        <label for="phone">Phone Number</label>
+                                        <input type="tel" id="phone_number" name="phone_number" class="form-control" pattern="[0-9]{10}" required>
+                                        <label for="phone_number">Phone Number</label>
                                         <i class="fas fa-phone"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group floating-input">
-                                        <select id="gender" required>
-                                            <option value=""></option>
-                                            <option>Male</option>
-                                            <option>Female</option>
-                                            <option>Other</option>
+                                        <select id="gender" name="gender" class="form-control" required>
+                                            <option value="" disabled selected>Select Gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
                                         </select>
                                         <label for="gender">Gender</label>
                                         <i class="fas fa-venus-mars"></i>
@@ -93,15 +115,15 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group floating-input">
-                                        <input type="number" id="age" min="13" max="100" required>
+                                        <input type="number" id="age" name="age" class="form-control" min="13" max="100" required>
                                         <label for="age">Age</label>
                                         <i class="fas fa-birthday-cake"></i>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group floating-input">
-                                        <input type="password" id="regPassword" required>
-                                        <label for="regPassword">Password</label>
+                                        <input type="password" id="password" name="password" class="form-control" required>
+                                        <label for="password">Password</label>
                                         <i class="fas fa-lock"></i>
                                     </div>
                                 </div>
@@ -127,34 +149,22 @@ document.addEventListener('DOMContentLoaded', function () {
     var myModal = new bootstrap.Modal(document.getElementById('authModal'));
     myModal.show();
 
-    // Redirect to home page when the modal is closed
-    var modalElement = document.getElementById('authModal');
-    modalElement.addEventListener('hidden.bs.modal', function () {
-        window.location.href = '{{ url_for("main.home") }}'; // Redirect to home page
+    // Show flash messages
+    var toastEl = document.getElementById('flashToast');
+    if (toastEl) {
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            toast.hide();
+        }, 5000);
+    }
+
+    // Redirect to home page when modal is closed
+    document.getElementById('authModal').addEventListener('hidden.bs.modal', function () {
+        window.location.href = '{{ url_for("main.home") }}';
     });
-});
-
-// Form submission handling
-document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const btn = e.target.querySelector('.auth-btn');
-    btn.classList.add('animate__animated', 'animate__pulse');
-    setTimeout(() => {
-        btn.classList.remove('animate__animated', 'animate__pulse');
-        // Add login logic here
-        alert('Login successful!');
-    }, 1000);
-});
-
-document.getElementById('registrationForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const btn = e.target.querySelector('.auth-btn');
-    btn.classList.add('animate__animated', 'animate__rubberBand');
-    setTimeout(() => {
-        btn.classList.remove('animate__animated', 'animate__rubberBand');
-        // Add registration logic here
-        alert('Registration successful!');
-    }, 1000);
 });
 
 // Input validation animations

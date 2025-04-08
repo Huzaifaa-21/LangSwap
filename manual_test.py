@@ -1,15 +1,20 @@
-from db import db, ContactSubmission
-from db import app  # Import the Flask app
+from db import db, UserRegistration
+from db import create_app
+
+app = create_app()
 
 def test_insert():
-    with app.app_context():  # Use application context
+    with app.app_context():
         try:
-            new_contact = ContactSubmission(
-                name='Test User',
+            new_user = UserRegistration(
+                full_name='Test User',
                 email='test@example.com',
-                message='This is a test message.'
+                phone_number='1234567890',
+                gender='Male',
+                age=25,
+                password='testpassword'  # Store hashed password in production
             )
-            db.session.add(new_contact)
+            db.session.add(new_user)
             db.session.commit()
             print("Data inserted successfully.")
         except Exception as e:

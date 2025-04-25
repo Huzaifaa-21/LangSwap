@@ -1,0 +1,46 @@
+.translate-container {
+    background: #181c2f;
+    color: #fff;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    padding: 2.5rem 2rem;
+    margin-bottom: 3rem;
+}
+
+.ai-title {
+    color: #00e6e6;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.form-label, .form-select, .form-control, .alert {
+    color: #222;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #00e6e6;
+}
+
+.ai-btn {
+    background: linear-gradient(90deg, #00e6e6 0%, #3a8dde 100%);
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.ai-btn:hover {
+    background: linear-gradient(90deg, #3a8dde 0%, #00e6e6 100%);
+    color: #fff;
+}
+
+.result-section {
+    background: #fff;
+    color: #222;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}

@@ -13,31 +13,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="#">LangSwap</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" title="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('main.home') }}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="about.html">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#translate">Translate</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('main.contact') }}">Contact</a>
-                </li>
-            </ul>
-            <a href="{{ url_for('main.register') }}" class="btn btn-outline-light btn-register">Register/Login</a>
-        </div>
-    </div>
-</nav>
+{% include 'navbar.html' %}
 
 <!-- About Section -->
 <div class="about-container">

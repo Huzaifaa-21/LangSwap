@@ -102,6 +102,13 @@ def test_db_connection(app):  # Accept app as an argument
     except Exception as e:
         print(f"Database connection error: {str(e)}")
 
+def verify_user_login(app, email, password):
+    with app.app_context():
+        user = UserRegistration.query.filter_by(email=email).first()
+        if user and user.password == password:  # For plain text password
+            return user
+        return None
+
 if __name__ == "__main__":
     create_database()
     create_tables()

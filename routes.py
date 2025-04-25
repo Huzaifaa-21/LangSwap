@@ -1,11 +1,13 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, session
-from db import db, ContactSubmission, UserRegistration
-import re  # Import regular expressions for email validation
-from werkzeug.security import check_password_hash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from functools import wraps
+from db import db, verify_user_login, create_app
 
-# Create a Blueprint for routing
 main = Blueprint('main', __name__)
-
+@main.route('/logout')
+def logout():
+    session.clear()
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('main.home'))
 @main.route('/')
 def home():
     return render_template('home.html')  # Render your home page
@@ -92,25 +94,64 @@ def register():
         
     return render_template('register.html')
 
-@main.route('/login', methods=['GET', 'POST'])
+@main.route('/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    app = create_app()  # Or get your app context appropriately
 
-        print(f"Attempting login with email: {email} and password: {password}")  # Debugging line
-
-        # Fetch user from the database
-        user = UserRegistration.query.filter_by(email=email).first()
-        print(f"User found: {user}")  # Debugging line
-
-        if user and check_password_hash(user.password, password):  # Check if user exists and password matches
-            session['user_id'] = user.id  # Store user ID in session
-            session['user_name'] = user.full_name  # Store user name in session
-            flash('Login successful! Welcome, ' + user.full_name + '!', 'success')  # Flash success message
-            return redirect(url_for('main.home'))  # Redirect to home page
-        else:
-            flash('Invalid email or password. Please try again.', 'danger')  # Flash error message
-            print("Invalid login attempt.")  # Debugging line
+    user = verify_user_login(app, email, password)
+    if user:
+        session['user_id'] = user.id
+        session['user_name'] = user.full_name
+        flash('Login successful!', 'success')
+        return redirect(url_for('main.home'))
+    else:
+        flash('Invalid email or password.', 'danger')
+        return redirect(url_for('main.register'))
 
     return render_template('register.html')  # Render the registration page if GET request
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            flash('Please log in to access the translate page.', 'danger')
+            return redirect(url_for('main.register'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@main.route('/translate', methods=['GET', 'POST'])
+@login_required
+def translate():
+    detected_lang = None
+    translated_text = None
+    translated_audio_url = None
+
+    if request.method == 'POST':
+        input_text = request.form.get('input_text')
+        input_audio = request.files.get('input_audio')
+        target_lang = request.form.get('target_lang')
+
+        # --- AI Logic Placeholder ---
+        # 1. Detect language (from text or audio)
+        # 2. Translate to target_lang
+        # 3. Generate translated audio
+
+        # For demonstration, use dummy values:
+        if input_text:
+            detected_lang = "English"  # Replace with AI detection
+            translated_text = f"Translated ({target_lang}): {input_text[::-1]}"  # Dummy translation
+            translated_audio_url = "/static/sample_audio.mp3"  # Replace with generated audio file path
+        elif input_audio:
+            detected_lang = "Detected from Audio"  # Replace with AI detection
+            translated_text = f"Audio translated to {target_lang}"  # Dummy translation
+            translated_audio_url = "/static/sample_audio.mp3"  # Replace with generated audio file path
+
+    return render_template(
+        'translate.html',
+        detected_lang=detected_lang,
+        translated_text=translated_text,
+        translated_audio_url=translated_audio_url
+    )

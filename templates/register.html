@@ -15,26 +15,20 @@
 </head>
 <body>
 
-<!-- Flash Message Toast -->
-<div class="toast-container position-fixed top-0 end-0 p-3">
-    <div id="flashToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <strong class="me-auto">Notification</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} alert-dismissible fade show mb-2" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-        </div>
-    </div>
+{% include 'navbar.html' %}
+
+<!-- Flash Message Alerts (Top-Right Corner) -->
+<div style="position: fixed; top: 1rem; right: 1rem; z-index: 1055; min-width: 300px;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show mb-2" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 </div>
 
 <!-- Auth Modal -->
@@ -174,6 +168,17 @@ document.querySelectorAll('.floating-input input, .floating-input select').forEa
         setTimeout(() => {
             input.parentElement.classList.remove('animate__animated', 'animate__shakeX');
         }, 1000);
+    });
+
+    // Auto-dismiss alerts after 5 seconds
+    document.addEventListener('DOMContentLoaded', function () {
+        // Auto-dismiss Bootstrap alerts after 5 seconds
+        setTimeout(function() {
+            document.querySelectorAll('.alert').forEach(function(alert) {
+                var bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                bsAlert.close();
+            });
+        }, 3000);
     });
 });
 </script>

@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail
 from sqlalchemy.exc import OperationalError
 import mysql.connector
 from mysql.connector import Error
@@ -9,6 +10,10 @@ from sqlalchemy import text  # Import text from SQLAlchemy
 # Create a single instance of SQLAlchemy
 db = SQLAlchemy()
 
+from flask_mail import Mail
+
+mail = Mail()
+
 def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Huzaifa%4021@localhost:3308/LangSwap'  # Update with your credentials
@@ -17,6 +22,12 @@ def create_app():
 
     # Initialize the SQLAlchemy instance with the app
     db.init_app(app)
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USERNAME'] = 'huzaifahabib8562@gmail.com'
+    app.config['MAIL_PASSWORD'] = 'vnjbtqulrvzyyqli'  # <-- No spaces, use your actual app password
+    mail.init_app(app)
 
     return app
 
@@ -102,14 +113,22 @@ def test_db_connection(app):  # Accept app as an argument
     except Exception as e:
         print(f"Database connection error: {str(e)}")
 
-def verify_user_login(app, email, password):
-    with app.app_context():
-        user = UserRegistration.query.filter_by(email=email).first()
-        if user and user.password == password:  # For plain text password
-            return user
-        return None
+def verify_user_login(email, password):
+    user = UserRegistration.query.filter_by(email=email).first()
+    if user and user.password == password:  # For plain text password
+        return user
+    return None
+
+def change_user_password(user_id, new_password):
+    user = UserRegistration.query.get(user_id)
+    if user:
+        user.password = new_password  # In production, hash the password!
+        db.session.commit()
+        return True
+    return False
 
 if __name__ == "__main__":
     create_database()
-    create_tables()
-    create_db()
+    app = create_app()
+    create_tables(app)
+    create_db(app)

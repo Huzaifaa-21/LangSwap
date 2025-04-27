@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-gradient">
     <div class="container">
         <a class="navbar-brand" href="#">LangSwap</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" title="Toggle navigation">
@@ -20,8 +20,16 @@
                 </li>
             </ul>
             {% if session.get('user_name') %}
-                <span class="navbar-text me-2">Welcome, {{ session['user_name'] }}</span>
-                <a href="{{ url_for('main.logout') }}" class="btn btn-outline-light btn-register">Logout</a>
+                <div class="d-flex align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" href="{{ url_for('main.profile') }}">
+                            <span class="profile-circle-anim me-2"></span>
+                            Profile
+                        </a>
+                    </li>
+                    <span class="navbar-text ms-3">Welcome, {{ session['user_name'] }}</span>
+                    <a href="{{ url_for('main.logout') }}" class="btn btn-outline-light btn-register ms-3">Logout</a>
+                </div>
             {% else %}
                 <a href="{{ url_for('main.register') }}" class="btn btn-outline-light btn-register">Register/Login</a>
             {% endif %}

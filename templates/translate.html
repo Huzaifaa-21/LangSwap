@@ -6,66 +6,351 @@
     <title>LangSwap - Translate</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/translate.css">
+    <link rel="stylesheet" href="/static/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* For dark mode */
+        body.dark-mode {
+            background: #181a1b !important;
+            color: #f5f5f5 !important;
+        }
+        .dark-mode .card, .dark-mode .form-control, .dark-mode .form-select, .dark-mode .alert-success {
+            background: #232526 !important;
+            color: #f5f5f5 !important;
+            border-color: #444;
+        }
+        .dark-mode .btn-primary {
+            background: #375a7f !important;
+            border-color: #375a7f !important;
+            color: #fff !important;
+        }
+        .dark-mode .btn-outline-secondary {
+            color: #f5f5f5 !important;
+            border-color: #888 !important;
+        }
+        .dark-mode .alert-success {
+            background: #1e2d24 !important;
+            color: #b9f6ca !important;
+        }
+        /* Make form labels and placeholders more visible in both modes */
+        .form-label, label {
+            color: #222 !important;
+            font-weight: 500;
+        }
+        .dark-mode .form-label, .dark-mode label {
+            color: #f5f5f5 !important;
+        }
+        .form-control::placeholder {
+            color: #666 !important;
+            opacity: 1;
+        }
+        .dark-mode .form-control::placeholder {
+            color: #cccccc !important;
+            opacity: 1;
+        }
+        .form-select, select, .form-control, textarea, input, .alert, .small, small, .badge, .history-list, .result-section, .ai-title {
+            color: #222 !important;
+        }
+        .dark-mode .form-select, .dark-mode select, .dark-mode .form-control, .dark-mode textarea, .dark-mode input, .dark-mode .alert, .dark-mode .small, .dark-mode small, .dark-mode .badge, .dark-mode .history-list, .dark-mode .result-section, .dark-mode .ai-title {
+            color: #f5f5f5 !important;
+        }
+        .small, small {
+            color: #555 !important;
+        }
+        .dark-mode .small, .dark-mode small {
+            color: #cccccc !important;
+        }
+        .badge.bg-info {
+            color: #222 !important;
+            background-color: #b6e0fe !important;
+        }
+        .dark-mode .badge.bg-info {
+            color: #181a1b !important;
+            background-color: #7fd8ff !important;
+        }
+        /* Move theme switcher to bottom right */
+        .theme-switch {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+        .word-count {
+            font-size: 0.95em;
+            color: #888;
+            float: right;
+        }
+        .dark-mode .word-count {
+            color: #cccccc !important;
+        }
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.95em;
+        }
+        .result-section {
+            animation: fadeInUp 0.7s;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+    </style>
 </head>
 <body>
 {% include 'navbar.html' %}
 
 <div class="container translate-container mt-5">
-    <h2 class="text-center mb-4 ai-title"><i class="fas fa-robot"></i> AI Language Translator</h2>
-    <form id="translate-form" method="POST" enctype="multipart/form-data" action="{{ url_for('main.translate') }}">
-        <div class="row g-4">
-            <div class="col-md-6">
-                <label for="inputText" class="form-label">Enter Text</label>
-                <textarea class="form-control" id="inputText" name="input_text" rows="5" placeholder="Type or paste text here..."></textarea>
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4 ai-title"><i class="fas fa-robot"></i> AI Language Translator</h2>
+        <form id="translate-form" method="POST" enctype="multipart/form-data" action="{{ url_for('main.translate') }}">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <label for="inputText" class="form-label" data-bs-toggle="tooltip" title="Type or paste the text you want to translate.">
+                        Enter Text
+                        <span class="word-count" id="wordCount">0 chars</span>
+                    </label>
+                    <textarea class="form-control" id="inputText" name="input_text" rows="5" placeholder="Type or paste text here..." aria-label="Input text"></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label for="inputAudio" class="form-label" data-bs-toggle="tooltip" title="Upload or record audio to translate.">Or Upload Audio</label>
+                    <input class="form-control mb-2" type="file" id="inputAudio" name="input_audio" accept="audio/*" aria-label="Upload audio">
+                    <small class="text-muted">Supported: mp3, wav, m4a, etc.</small>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-secondary" id="recordBtn" data-bs-toggle="tooltip" title="Record your voice"><i class="fas fa-microphone"></i> Record</button>
+                        <button type="button" class="btn btn-danger d-none" id="stopBtn" data-bs-toggle="tooltip" title="Stop recording"><i class="fas fa-stop"></i> Stop</button>
+                        <audio id="audioPreview" controls class="mt-2 d-none"></audio>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-                <label for="inputAudio" class="form-label">Or Upload Audio</label>
-                <input class="form-control" type="file" id="inputAudio" name="input_audio" accept="audio/*">
-                <small class="text-muted">Supported: mp3, wav, m4a, etc.</small>
+            <div class="row g-4 mt-3">
+                <!-- Removed Source Language dropdown and label -->
+                <div class="col-md-6">
+                    <label for="targetLang" class="form-label" data-bs-toggle="tooltip" title="Select the language you want to translate to.">Translate To</label>
+                    <select class="form-select" id="targetLang" name="target_lang" required aria-label="Target language">
+                        <option value="" disabled selected>Select language</option>
+                        <option value="en">English</option>
+                        <option value="hi">Hindi</option>
+                        <option value="bn">Bengali</option>
+                        <option value="es">Spanish</option>
+                        <option value="zh-CN">Chinese (Simplified)</option>
+                        <option value="ru">Russian</option>
+                        <option value="ja">Japanese</option>
+                        <option value="ko">Korean</option>
+                        <option value="de">German</option>
+                        <option value="fr">French</option>
+                        <option value="ta">Tamil</option>
+                        <option value="te">Telugu</option>
+                        <option value="kn">Kannada</option>
+                        <option value="gu">Gujarati</option>
+                        <option value="pa">Punjabi</option>
+                    </select>
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100 ai-btn" id="translateBtn" aria-label="Translate"><i class="fas fa-language"></i> Translate</button>
+                </div>
+            </div>
+            <!-- Add these two elements below -->
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-outline-secondary w-100" id="clearBtn" aria-label="Clear form"><i class="fas fa-eraser"></i> Clear</button>
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                    <div id="progressSpinner" class="spinner-border text-primary d-none ms-auto" role="status" aria-hidden="true"></div>
+                </div>
+            </div>
+        </form>
+
+        <!-- 7. Translation History (for logged-in users) -->
+        {% if session['user_id'] and translation_history %}
+        <div class="mt-4">
+            <h6><i class="fas fa-history"></i> Recent Translations</h6>
+            <ul class="list-group history-list">
+                {% for item in translation_history %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>{{ item.input_text|truncate(30) }} <i class="fas fa-arrow-right"></i> {{ item.translated_text|truncate(30) }}</span>
+                    <span class="badge bg-secondary">{{ item.target_lang }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if detected_lang %}
+        <div class="result-section mt-5">
+            <h5><i class="fas fa-search"></i> Detected Language: <span class="badge bg-info">{{ detected_lang }}</span></h5>
+        </div>
+        {% endif %}
+
+        {% if translated_text %}
+        <div class="result-section mt-3">
+            <h5>Translated Text:</h5>
+            <div class="alert alert-success d-flex justify-content-between align-items-center">
+                <span id="translatedText">{{ translated_text }}</span>
+                <!-- 2. Copy to Clipboard Button -->
+                <button class="btn btn-outline-secondary btn-sm ms-3" type="button" id="copyBtn" title="Copy to clipboard" aria-label="Copy translated text">
+                    <i class="fas fa-copy"></i>
+                </button>
             </div>
         </div>
-        <div class="row g-4 mt-3">
-            <div class="col-md-6">
-                <label for="targetLang" class="form-label">Translate To</label>
-                <select class="form-select" id="targetLang" name="target_lang" required>
-                    <option value="" disabled selected>Select language</option>
-                    <option value="en">English</option>
-                    <option value="hi">Hindi</option>
-                    <option value="es">Spanish</option>
-                    <option value="fr">French</option>
-                    <option value="de">German</option>
-                    <option value="zh">Chinese</option>
-                    <!-- Add more as needed -->
-                </select>
-            </div>
-            <div class="col-md-6 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary w-100 ai-btn"><i class="fas fa-language"></i> Translate</button>
+        {% endif %}
+
+        {% if translated_audio_url %}
+        <div class="result-section mt-3">
+            <h5>Translated Audio:</h5>
+            <div class="d-flex align-items-center gap-2">
+                <audio controls src="{{ translated_audio_url }}" id="translatedAudio"></audio>
+                <!-- 3. Download Translated Audio -->
+                <a id="downloadAudioBtn" class="btn btn-outline-success btn-sm" href="{{ translated_audio_url }}" download="translated_audio.mp3" data-bs-toggle="tooltip" title="Download audio" aria-label="Download translated audio">
+                    <i class="fas fa-download"></i>
+                </a>
             </div>
         </div>
-    </form>
-
-    {% if detected_lang %}
-    <div class="result-section mt-5">
-        <h5>Detected Language: <span class="badge bg-info">{{ detected_lang }}</span></h5>
+        {% endif %}
     </div>
-    {% endif %}
+</div>
 
-    {% if translated_text %}
-    <div class="result-section mt-3">
-        <h5>Translated Text:</h5>
-        <div class="alert alert-success">{{ translated_text }}</div>
-    </div>
-    {% endif %}
-
-    {% if translated_audio_url %}
-    <div class="result-section mt-3">
-        <h5>Translated Audio:</h5>
-        <audio controls src="{{ translated_audio_url }}"></audio>
-    </div>
-    {% endif %}
+<!-- Theme Switcher moved to bottom right -->
+<div class="theme-switch">
+    <button id="themeToggle" class="btn btn-outline-secondary btn-sm" title="Toggle light/dark mode">
+        <i class="fas fa-moon"></i>
+    </button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+let mediaRecorder;
+let audioChunks = [];
+const recordBtn = document.getElementById('recordBtn');
+const stopBtn = document.getElementById('stopBtn');
+const audioPreview = document.getElementById('audioPreview');
+const inputAudio = document.getElementById('inputAudio');
+const translateBtn = document.getElementById('translateBtn');
+const clearBtn = document.getElementById('clearBtn');
+const wordCount = document.getElementById('wordCount');
+const themeToggle = document.getElementById('themeToggle');
+const progressSpinner = document.getElementById('progressSpinner');
+
+let stream = null;
+
+// 5. Show Word/Character Count
+document.getElementById('inputText').addEventListener('input', function() {
+    wordCount.textContent = this.value.length + ' chars';
+});
+
+// 6. Theme Switcher
+themeToggle.addEventListener('click', function() {
+    document.body.classList.toggle('dark-mode');
+    themeToggle.innerHTML = document.body.classList.contains('dark-mode')
+        ? '<i class="fas fa-sun"></i>'
+        : '<i class="fas fa-moon"></i>';
+});
+
+// 4. Clear Form Button
+clearBtn.addEventListener('click', function() {
+    document.getElementById('inputText').value = '';
+    inputAudio.value = '';
+    audioPreview.classList.add('d-none');
+    document.getElementById('sourceLang').selectedIndex = 0;
+    document.getElementById('targetLang').selectedIndex = 0;
+    wordCount.textContent = '0 chars';
+});
+
+// 9. Progress Indicator
+document.getElementById('translate-form').addEventListener('submit', function() {
+    progressSpinner.classList.remove('d-none');
+    translateBtn.disabled = true;
+});
+
+// 2. Copy to Clipboard Button
+document.addEventListener('DOMContentLoaded', function() {
+    const copyBtn = document.getElementById('copyBtn');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function() {
+            const text = document.getElementById('translatedText').innerText;
+            navigator.clipboard.writeText(text);
+            copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+            }, 1500);
+        });
+    }
+});
+
+// 8. Tooltip Help
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+});
+
+// 10. Accessibility Improvements (ARIA labels already added above)
+
+// 3. Download Translated Audio (handled by <a download>)
+
+// 1. Auto-Detect Source Language Option (handled by backend, just UI here)
+
+// 7. Translation History (handled by backend, just UI here)
+
+// Recording logic (with progress indicator)
+recordBtn.addEventListener('click', async function() {
+    audioChunks = [];
+    recordBtn.classList.add('d-none');
+    stopBtn.classList.remove('d-none');
+    audioPreview.classList.add('d-none');
+    inputAudio.value = "";
+    if (inputAudio.files && inputAudio.files.length > 0) {
+        const emptyData = new DataTransfer();
+        inputAudio.files = emptyData.files;
+    }
+    translateBtn.disabled = true;
+
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.start();
+
+        mediaRecorder.ondataavailable = function(e) {
+            if (e.data.size > 0) {
+                audioChunks.push(e.data);
+            }
+        };
+
+        mediaRecorder.onstop = function() {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            audioPreview.src = audioUrl;
+            audioPreview.classList.remove('d-none');
+
+            // Prepare the blob for form submission
+            const file = new File([audioBlob], "recorded_audio.webm", { type: "audio/webm" });
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            inputAudio.files = dataTransfer.files;
+
+            // Stop all tracks to release the mic
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            translateBtn.disabled = false;
+        };
+    } catch (err) {
+        alert("Microphone access denied or not available.");
+        stopBtn.classList.add('d-none');
+        recordBtn.classList.remove('d-none');
+        translateBtn.disabled = false;
+    }
+});
+
+stopBtn.addEventListener('click', function() {
+    stopBtn.classList.add('d-none');
+    recordBtn.classList.remove('d-none');
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+    }
+});
+
+// Optional: Disable translate button while recording
+translateBtn.disabled = false;
+</script>
 </body>
 </html>

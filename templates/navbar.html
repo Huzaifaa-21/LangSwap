@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-gradient">
+    <div class="container">
+        <a class="navbar-brand" href="#">LangSwap</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" title="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.home') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.about') }}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.translate') }}">Translate</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.contact') }}">Contact</a>
+                </li>
+            </ul>
+            {% if session.get('user_name') %}
+                <div class="d-flex align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" href="{{ url_for('main.profile') }}">
+                            <span class="profile-circle-anim me-2"></span>
+                            Profile
+                        </a>
+                    </li>
+                    <span class="navbar-text ms-3">Welcome, {{ session['user_name'] }}</span>
+                    <a href="{{ url_for('main.logout') }}" class="btn btn-outline-light btn-register ms-3">Logout</a>
+                </div>
+            {% else %}
+                <a href="{{ url_for('main.register') }}" class="btn btn-outline-light btn-register">Register/Login</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

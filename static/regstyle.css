@@ -110,3 +110,60 @@
     color: white;
     transform: scale(1.05);
 }
+
+/* Modal Gradient Styling to Match Navbar */
+#authModal .modal-content {
+    background: linear-gradient(120deg, #375a7f 0%, #6dd5ed 100%) !important;
+    color: #fff !important;
+    border-radius: 20px;
+    border: none;
+    box-shadow: 0 15px 30px rgba(55,90,127,0.25);
+}
+
+#authModal .modal-header,
+#authModal .modal-footer {
+    border: none;
+    background: transparent;
+}
+
+#authModal .modal-title {
+    color: #fff !important;
+    letter-spacing: 1px;
+}
+
+#authModal .form-label,
+#authModal .form-control {
+    color: #222 !important;
+}
+
+#authModal .form-control,
+#authModal input,
+#authModal select {
+    border-radius: 8px;
+    border: 1px solid #6dd5ed;
+}
+
+#authModal .btn-primary,
+#authModal .auth-btn {
+    background: linear-gradient(90deg, #375a7f 0%, #6dd5ed 100%) !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+#authModal .btn-primary:hover,
+#authModal .auth-btn:hover {
+    background: #ffd93d !important;
+    color: #375a7f !important;
+}
+
+#authModal .modal-content a {
+    color: #ffd93d;
+    text-decoration: underline;
+}
+
+#authModal .modal-content a:hover {
+    color: #fff;
+}

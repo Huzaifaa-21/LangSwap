@@ -4,118 +4,162 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact LangSwap</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="/static/styles.css">
-    <!-- Animate CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .contact-hero {
+            background: linear-gradient(120deg, #375a7f 0%, #6dd5ed 100%);
+            color: #fff;
+            padding: 60px 0 30px 0;
+            text-align: center;
+            border-radius: 0 0 40px 40px;
+            box-shadow: 0 8px 32px rgba(55,90,127,0.15);
+        }
+        .contact-hero h1 {
+            font-size: 2.7rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .contact-hero p {
+            font-size: 1.2rem;
+            margin-top: 15px;
+        }
+        .contact-form-section {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 40px 30px;
+            margin-top: -30px;
+            box-shadow: 0 4px 16px rgba(55,90,127,0.08);
+        }
+        .contact-info {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(55,90,127,0.08);
+            padding: 30px 20px;
+            margin-bottom: 30px;
+        }
+        .contact-info i {
+            color: #375a7f;
+            margin-right: 10px;
+        }
+        .social-icons .icon-link {
+            font-size: 1.7rem;
+            margin: 0 10px;
+            color: #375a7f;
+            transition: color 0.3s;
+        }
+        .social-icons .icon-link:hover {
+            color: #6dd5ed;
+        }
+    </style>
 </head>
 <body>
+{% include 'navbar.html' %}
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="#">LangSwap</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" title="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('main.home') }}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('main.about') }}">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#translate">Translate</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{{ url_for('main.contact') }}">Contact</a>
-                </li>
-            </ul>
-            <a href="{{ url_for('main.register') }}" class="btn btn-outline-light btn-register">Register/Login</a>
+<div class="contact-hero animate__animated animate__fadeInDown">
+    <h1>Contact Us</h1>
+    <p class="animate__animated animate__fadeInUp animate__delay-1s">
+        Have questions, feedback, or want to collaborate?<br>
+        Reach out to the LangSwap team!
+    </p>
+</div>
+
+<div class="container contact-form-section animate__animated animate__fadeInUp">
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="contact-info">
+                <h4><i class="fas fa-envelope"></i> Email</h4>
+                <p>support@langswap.com</p>
+                <h4><i class="fas fa-phone"></i> Phone</h4>
+                <p>88562955286</p>
+                <h4><i class="fas fa-map-marker-alt"></i> Address</h4>
+                <p>Sarvodaya Nagar , Lucknow . INDIA</p>
+                <div class="social-icons mt-4">
+                    <a href="#" class="icon-link" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="icon-link" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="icon-link" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="icon-link" title="GitHub"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
         </div>
-    </div>
-</nav>
-
-<!-- Add flash messages section below the nav -->
-<div class="container mt-3">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show">
+        <div class="col-md-6">
+            <!-- Flash message block -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }} alert-dismissible fade show auto-dismiss-alert" role="alert">
                     {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            <form method="POST" action="{{ url_for('main.contact') }}" class="contact-form needs-validation" novalidate>
+                <h4 class="mb-3">Send us a message</h4>
+                <div class="form-group mb-3">
+                    <label for="name" class="form-label">Your Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                    <div class="invalid-feedback">Please enter your name.</div>
                 </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-</div>
-
-<!-- Contact Section -->
-<div class="about-container">
-    <div class="about-content">
-        <h1 class="project-name">Contact LangSwap</h1>
-        <div class="about-text">
-            <p>We'd love to hear from you! Whether you have a question, feedback, or just want to say hello, feel free to reach out to us using the form below or through our social media channels.</p>
-            
-            <!-- Contact Form -->
-            <form class="contact-form" method="POST" action="{{ url_for('main.contact') }}">
-                <div class="form-group">
-                    <label for="name">Your Name</label>
-                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required>
+                <div class="form-group mb-3">
+                    <label for="email" class="form-label">Your Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                    <div class="invalid-feedback">Please enter a valid email address.</div>
                 </div>
-                <div class="form-group">
-                    <label for="email">Your Email</label>
-                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                <div class="form-group mb-3">
+                    <label for="subject" class="form-label">Subject</label>
+                    <input type="text" class="form-control" id="subject" name="subject" required>
+                    <div class="invalid-feedback">Please enter a subject.</div>
                 </div>
-                <div class="form-group">
-                    <label for="message">Your Message</label>
-                    <textarea id="message" name="message" class="form-control" rows="5" placeholder="Enter your message" required></textarea>
+                <div class="form-group mb-3">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                    <div class="invalid-feedback">Please enter your message.</div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-submit">Send Message</button>
+                <button type="submit" class="btn btn-primary btn-lg w-100">Send Message <i class="fas fa-paper-plane"></i></button>
             </form>
-            
-            <p>Alternatively, you can connect with us on social media:</p>
-        </div>
-        <div class="social-icons">
-            <a href="https://www.instagram.com/" class="icon-link" title="Facebook"><i class="fab fa-facebook"></i></a>
-            <a href="https://www.facebook.com/" class="icon-link" title="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="https://x.com/?lang=en-in&mx=2" class="icon-link" title="Twitter"><i class="fab fa-twitter"></i></a>
         </div>
     </div>
 </div>
 
-<!-- Footer Section -->
 <footer class="footer bg-light py-5">
-    <div class="container">
-        <h2 class="text-center mb-4">Why Choose LangSwap?</h2>
-        <div class="row justify-content-center">
-            <div class="col-md-4 text-center">
-                <i class="fas fa-bolt fa-2x mb-2"></i>
-                <h4>Fast and Reliable</h4>
-                <p>Experience quick translations that you can trust.</p>
-            </div>
-            <div class="col-md-4 text-center">
-                <i class="fas fa-users fa-2x mb-2"></i>
-                <h4>Community Support</h4>
-                <p>Join a community of users and share your experiences.</p>
-            </div>
-            <div class="col-md-4 text-center">
-                <i class="fas fa-comments fa-2x mb-2"></i>
-                <h4>Feedback Welcome</h4>
-                <p>Your input helps us improve our services.</p>
-            </div>
-        </div>
-        <div class="footer-bottom text-center mt-4">
-            <p>&copy; 2025 LangSwap. All rights reserved.</p>
-        </div>
+    <div class="container text-center">
+        <p>&copy; 2025 LangSwap. All rights reserved.</p>
     </div>
 </footer>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Bootstrap validation
+    (() => {
+      'use strict'
+      const forms = document.querySelectorAll('.needs-validation')
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+    })();
+
+    // Auto-dismiss flash messages after 4 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        document.querySelectorAll('.auto-dismiss-alert').forEach(function(alert) {
+          // Use Bootstrap's alert 'close' method if available
+          if (typeof bootstrap !== 'undefined') {
+            var alertInstance = bootstrap.Alert.getOrCreateInstance(alert);
+            alertInstance.close();
+          } else {
+            alert.classList.remove('show');
+          }
+        });
+      }, 4000);
+    });
+</script>
 </body>
 </html>
